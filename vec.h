@@ -3,7 +3,12 @@
 #include <iostream>
 #include <cmath>
 
+#include "mat.h"
+
 namespace PANSFE {
+    template<class T>
+    class Mat;
+
     template<class T>
     class Vec {
 public:
@@ -69,6 +74,19 @@ public:
         const Vec<T> operator/(T _a) const;
         const Vec<T> operator^(const Vec<T> &_vec) const;
 
+        operator Mat<T>() const {
+            Mat<T> retmat(this->size, 1);
+            for (int i = 0; i < retmat.row*retmat.col; i++) {
+                retmat.values[i] = this->values[i];
+            }
+            return retmat;
+        }
+
+        operator T() const {
+            assert(this->size == 1);
+            return this->values[0];
+        }
+
         template<class U>
 	    friend std::ostream& operator<<(std::ostream &_out, const Vec<U> &_vec);
         template<class U>
@@ -78,6 +96,11 @@ public:
         const Vec<T> Normal() const;
         const Vec<T> Vstack(const Vec<T> &_vec) const;
         const Vec<T> Segment(int _head, int _length) const;
+        const Mat<T> Transpose() const;
+        const Mat<T> Diagonal() const;
+
+        template<class U>
+        friend class Mat;
 
 private:
         int size;
@@ -159,7 +182,6 @@ private:
 
     template<class T>
     const Vec<T> Vec<T>::operator+(const Vec<T> &_vec) const {
-        assert(this->size == _vec.size);
         Vec<T> retvec = *this;
         retvec += _vec;
         return retvec;
@@ -169,14 +191,13 @@ private:
     const Vec<T> Vec<T>::operator-() const {
         Vec<T> retvec = *this;
         for (int i = 0; i < retvec.size; i++) {
-            retvec[i] = -retvec[i];
+            retvec.values[i] = -retvec.values[i];
         }
         return retvec;
     }
 
     template<class T>
     const Vec<T> Vec<T>::operator-(const Vec<T> &_vec) const {
-        assert(this->size == _vec.size);
         Vec<T> retvec = *this;
         retvec -= _vec;
         return retvec;
@@ -257,5 +278,23 @@ private:
             retvec.values[i] = this->values[_head + i];
         }
         return retvec;
+    }
+
+    template<class T>
+    const Mat<T> Vec<T>::Transpose() const {
+        Mat<T> retmat(1, this->size);
+        for(int i = 0; i < retmat.row*retmat.col; i++){
+            retmat.values[i] = this->values[i];
+        }
+        return retmat;
+    }
+
+    template<class T>
+    const Mat<T> Vec<T>::Diagonal() const {
+        Mat<T> retmat(this->size, this->size);
+        for (int i = 0; i < this->size; i++) {
+            retmat.values[retmat.col*i + i] = this->values[i];
+        }
+        return retmat;
     }
 }
