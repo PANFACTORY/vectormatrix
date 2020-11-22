@@ -13,21 +13,29 @@ public:
         }
         Vec(int _size, T _value = T()) {
             this->size = _size;
-            this->values = new T[this->size];
-            for (int i = 0; i < this->size; i++) {
-                this->values[i] = _value;
+            if (this->size > 0) {
+                this->values = new T[this->size];
+                for (int i = 0; i < this->size; i++) {
+                    this->values[i] = _value;
+                }
+            } else {
+                this->values = nullptr;
             }
         }
         Vec(const std::initializer_list<T> &_values) {
             this->size = _values.size();
-            this->values = new T[this->size];
-            for(int i = 0; i < this->size; i++){
-                this->values[i] = *(_values.begin() + i);
+            if (this->size > 0) {
+                this->values = new T[this->size];
+                for(int i = 0; i < this->size; i++){
+                    this->values[i] = *(_values.begin() + i);
+                }
+            } else {
+                this->values = nullptr;
             }
         }
         Vec(const Vec<T> &_vec) {
             this->size = _vec.size;
-            if (_vec.values) {
+            if (this->size > 0) {
                 this->values = new T[this->size];
                 for (int i = 0; i < this->size; i++) {
                     this->values[i] = _vec.values[i];
