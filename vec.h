@@ -95,7 +95,8 @@ public:
         T Norm() const;
         const Vec<T> Normal() const;
         const Vec<T> Vstack(const Vec<T> &_vec) const;
-        const Vec<T> Segment(int _head, int _length) const;
+        const Mat<T> Hstack(const Mat<T> &_mat) const;
+        const Vec<T> Block(int _head, int _length) const;
         const Mat<T> Transpose() const;
         const Mat<T> Diagonal() const;
 
@@ -271,7 +272,20 @@ private:
     }
 
     template<class T>
-    const Vec<T> Vec<T>::Segment(int _head, int _length) const {
+    const Mat<T> Vec<T>::Hstack(const Mat<T> &_mat) const {
+        assert(this->size == _mat.row);
+        Mat<T> retmat(this->size, _mat.col + 1);
+        for (int i = 0; i < retmat.row; i++) {
+            retmat.values[retmat.col*i] = this->values[i];
+            for (int j = 0; j < retmat.col; j++) {
+                retmat.values[retmat.col*i + (j + 1)] = _mat.values[_mat.col*i + j];
+            }
+        }
+        return retmat;
+    }
+
+    template<class T>
+    const Vec<T> Vec<T>::Block(int _head, int _length) const {
         assert(0 <= _head && 0 <= _length && _head + _length < this->size);
         Vec<T> retvec(_length);
         for (int i = 0; i < retvec.size; i++) {

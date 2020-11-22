@@ -22,4 +22,7 @@ int main() {
 
     int d = B.Transpose()*B;
     std::cout << d << std::endl;
+
+    std::cout << A.Hstack(b) << std::endl;
+    std::cout << b.Hstack(b) << std::endl;
 }
