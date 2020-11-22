@@ -8,9 +8,13 @@ int main() {
     std::cout << a << std::endl << b << std::endl << c << std::endl << d << std::endl << e << std::endl;  
 
     //  メンバへのアクセス
-    std::cout << a.Size() << "\t" << b.Size() << std::endl << std::endl;
+    std::cout << a.Size() << "\t" << d[1] << "\t" << e(2) << std::endl << std::endl;
 
-    //  代入演算子
+    //  演算子
+    std::cout << 2*(e + d*5) << std::endl; 
+
+    //  代入演算子, 複合代入演算子
     a = b;
-    std::cout << a << std::endl;
+    b -= d;
+    std::cout << a << std::endl << b << std::endl;
 }
