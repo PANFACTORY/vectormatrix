@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 namespace PANSFE {
     template<class T>
@@ -50,6 +51,7 @@ public:
         Vec<T>& operator-=(const Vec<T> &_vec);
         Vec<T>& operator*=(T _a);
         Vec<T>& operator/=(T _a);
+        Vec<T>& operator^=(const Vec<T> &_vec);
 
         const Vec<T> operator+(const Vec<T> &_vec) const;
         const Vec<T> operator-() const;
@@ -57,11 +59,17 @@ public:
         const Vec<T> operator*(T _a) const;
         T operator*(const Vec<T> &_vec) const;
         const Vec<T> operator/(T _a) const;
+        const Vec<T> operator^(const Vec<T> &_vec) const;
 
         template<class U>
 	    friend std::ostream& operator<<(std::ostream &_out, const Vec<U> &_vec);
         template<class U>
         friend Vec<U> operator*(U _a, const Vec<U> &_vec);
+
+        T Norm() const;
+        const Vec<T> Normal() const;
+        const Vec<T> Vstack(const Vec<T> &_vec) const;
+        const Vec<T> Segment(int _head, int _length) const;
 
 private:
         int size;
@@ -131,6 +139,17 @@ private:
     }
 
     template<class T>
+    Vec<T>& Vec<T>::operator^=(const Vec<T> &_vec) {
+        assert(this->size == 3 && _vec.size == 3);
+        Vec<T> retvec(3);
+        retvec[0] = this->values[1]*_vec.values[2] - this->values[2]*_vec.values[1];
+        retvec[1] = this->values[2]*_vec.values[0] - this->values[0]*_vec.values[2];
+        retvec[2] = this->values[0]*_vec.values[1] - this->values[1]*_vec.values[0];
+        *this = retvec;
+        return *this;
+    }
+
+    template<class T>
     const Vec<T> Vec<T>::operator+(const Vec<T> &_vec) const {
         assert(this->size == _vec.size);
         Vec<T> retvec = *this;
@@ -179,6 +198,13 @@ private:
         return retvec;
     }
 
+    template<class T>
+    const Vec<T> Vec<T>::operator^(const Vec<T> &_vec) const {
+        Vec<T> retvec = *this;
+        retvec ^= _vec;
+        return retvec;
+    }
+
     template<class U>
     std::ostream& operator<<(std::ostream &_out, const Vec<U> &_vec) {
         for (int i = 0; i < _vec.size; i++) {
@@ -190,5 +216,38 @@ private:
     template<class U>
     Vec<U> operator*(U _a, const Vec<U> &_vec) {
         return _vec*_a;
+    }
+
+    template<class T>
+    T Vec<T>::Norm() const {
+        return sqrt((*this)*(*this));
+    }
+
+    template<class T>
+    const Vec<T> Vec<T>::Normal() const {
+        Vec<T> retvec = *this;
+        return retvec/retvec.Norm();
+    }
+
+    template<class T>
+    const Vec<T> Vec<T>::Vstack(const Vec<T> &_vec) const {
+        Vec<T> retvec(this->size + _vec.size);
+        for (int i = 0; i < this->size; i++) {
+            retvec.values[i] = this->values[i];
+        }
+        for (int i = 0; i < _vec.size; i++) {
+            retvec.values[i + this->size] = _vec.values[i];
+        }
+        return retvec;
+    }
+
+    template<class T>
+    const Vec<T> Vec<T>::Segment(int _head, int _length) const {
+        assert(0 <= _head && 0 <= _length && _head + _length < this->size);
+        Vec<T> retvec(_length);
+        for (int i = 0; i < retvec.size; i++) {
+            retvec.values[i] = this->values[_head + i];
+        }
+        return retvec;
     }
 }

@@ -16,5 +16,6 @@ int main() {
     //  代入演算子, 複合代入演算子
     a = b;
     b -= d;
-    std::cout << a << std::endl << b << std::endl;
+    e ^= d;
+    std::cout << a << std::endl << b << std::endl << e << std::endl;
 }
