@@ -72,6 +72,7 @@ public:
         int Col() const;
         T* operator[](int _i);          //  without validation
         T& operator()(int _i, int _j);  //  with validation
+        T* Values();
 
         Mat<T>& operator=(const Mat<T> &_mat);
         Mat<T>& operator+=(const Mat<T> &_mat);
@@ -144,6 +145,11 @@ private:
     T& Mat<T>::operator()(int _i, int _j) {
         assert(0 <= _i && _i < this->row && 0 <= _j && _j < this->col);
         return this->values[this->col*_i + _j];
+    }
+
+    template<class T>
+    T* Mat<T>::Values() {
+        return values;
     }
 
     template<class T>

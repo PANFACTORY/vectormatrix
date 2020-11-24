@@ -58,6 +58,7 @@ public:
         int Size() const;
         T& operator[](int _i);  //  without validation
         T& operator()(int _i);  //  with validation
+        T* Values();
 
         Vec<T>& operator=(const Vec<T> &_vec);
         Vec<T>& operator+=(const Vec<T> &_vec);
@@ -122,6 +123,11 @@ private:
     T& Vec<T>::operator()(int _i) {
         assert(0 <= _i && _i < this->size);
         return this->values[_i];
+    }
+
+    template<class T>
+    T* Vec<T>::Values() {
+        return values;
     }
 
     template<class T>
