@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(vectormatrix_test CXX)
+set (CMAKE_CXX_STANDARD 11)
 
 include(FetchContent)
 FetchContent_Declare(
