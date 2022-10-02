@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include <sstream>
+
 TEST(VectorTest, VectorConstructorTest1) {
     PANSFE::Vec<int> a;
     ASSERT_EQ(a.Size(), 0);
@@ -51,34 +53,77 @@ TEST(VectorTest, VectorAccessorTest2) {
     ASSERT_EQ(*(a.Values() + 1), 2);
 }
 
+TEST(VectorTest, VectorCompareTest1) {
+    PANSFE::Vec<int> a = {1, 2}, b = {1, 2};
+    ASSERT_TRUE(a == b);
+}
+
+TEST(VectorTest, VectorCompareTest2) {
+    PANSFE::Vec<int> a = {1, 2}, b = {1, 3};
+    ASSERT_TRUE(a != b);
+}
+
+TEST(VectorTest, VectorAssignmentTest1) {
+    PANSFE::Vec<int> a = {1, 2}, b = {3, 4};
+    a = b;
+    ASSERT_EQ(a, b);
+    ASSERT_NE(&a, &b);
+    ASSERT_NE(a.Values(), b.Values());
+}
+
+TEST(VectorTest, VectorAssignmentTest2) {
+    PANSFE::Vec<int> a = {4, 3}, b = {2, 1}, c = {6, 4};
+    a += b;
+    ASSERT_EQ(a, c);
+}
+
+TEST(VectorTest, VectorAssignmentTest3) {
+    PANSFE::Vec<int> a = {3, 4}, b = {2, 1}, c = {1, 3};
+    a -= b;
+    ASSERT_EQ(a, c);
+}
+
+TEST(VectorTest, VectorAssignmentTest4) {
+    PANSFE::Vec<int> a = {4, 2}, b = {8, 4};
+    a *= 2;
+    ASSERT_EQ(a, b);
+}
+
+TEST(VectorTest, VectorAssignmentTest5) {
+    PANSFE::Vec<int> a = {4, 2}, b = {2, 1};
+    a /= 2;
+    ASSERT_EQ(a, b);
+}
+
+TEST(VectorTest, VectorAssignmentTest6) {
+    PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6}, c = {-8, 9, -2};
+    a ^= b;
+    ASSERT_EQ(a, c);
+}
+
 TEST(VectorTest, VectorOperatorTest1) {
-    PANSFE::Vec<int> a = {5, 3}, b = {2, 1}, c = a + b;
-    ASSERT_EQ(*(c.Values() + 0), 7);
-    ASSERT_EQ(*(c.Values() + 1), 4);
+    PANSFE::Vec<int> a = {5, 3}, b = {2, 1}, c = {7, 4};
+    ASSERT_EQ(a + b, c);
 }
 
 TEST(VectorTest, VectorOperatorTest2) {
-    PANSFE::Vec<int> a = {5, 3}, b = {2, 1}, c = a - b;
-    ASSERT_EQ(*(c.Values() + 0), 3);
-    ASSERT_EQ(*(c.Values() + 1), 2);
+    PANSFE::Vec<int> a = {5, 3}, b = {2, 1}, c = {3, 2};
+    ASSERT_EQ(a - b, c);
 }
 
 TEST(VectorTest, VectorOperatorTest3) {
-    PANSFE::Vec<int> a = {5, 3}, b = -a;
-    ASSERT_EQ(*(b.Values() + 0), -5);
-    ASSERT_EQ(*(b.Values() + 1), -3);
+    PANSFE::Vec<int> a = {5, 3}, b = {-5, -3};
+    ASSERT_EQ(-a, b);
 }
 
 TEST(VectorTest, VectorOperatorTest4) {
-    PANSFE::Vec<int> a = {3, 4}, b = a * 5;
-    ASSERT_EQ(*(b.Values() + 0), 15);
-    ASSERT_EQ(*(b.Values() + 1), 20);
+    PANSFE::Vec<int> a = {3, 4}, b = {15, 20};
+    ASSERT_EQ(a * 5, b);
 }
 
 TEST(VectorTest, VectorOperatorTest5) {
-    PANSFE::Vec<int> a = {3, 4}, b = 5 * a;
-    ASSERT_EQ(*(b.Values() + 0), 15);
-    ASSERT_EQ(*(b.Values() + 1), 20);
+    PANSFE::Vec<int> a = {3, 4}, b = {15, 20};
+    ASSERT_EQ(5 * a, b);
 }
 
 TEST(VectorTest, VectorOperatorTest6) {
@@ -87,65 +132,48 @@ TEST(VectorTest, VectorOperatorTest6) {
 }
 
 TEST(VectorTest, VectorOperatorTest7) {
-    PANSFE::Vec<int> a = {2, 4}, b = a / 2;
-    ASSERT_EQ(*(b.Values() + 0), 1);
-    ASSERT_EQ(*(b.Values() + 1), 2);
+    PANSFE::Vec<int> a = {2, 4}, b = {1, 2};
+    ASSERT_EQ(a / 2, b);
 }
 
 TEST(VectorTest, VectorOperatorTest8) {
-    PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6}, c = a ^ b;
-    ASSERT_EQ(*(c.Values() + 0), -8);
-    ASSERT_EQ(*(c.Values() + 1), 9);
-    ASSERT_EQ(*(c.Values() + 2), -2);
+    PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6}, c = {-8, 9, -2};
+    ASSERT_EQ(a ^ b, c);
 }
 
 TEST(VectorTest, VectorOperatorTest9) {
-    PANSFE::Vec<int> a = {1, 2}, b = {3, 4}, c = 5 * (a + b * 6);
-    ASSERT_EQ(*(c.Values() + 0), 95);
-    ASSERT_EQ(*(c.Values() + 1), 130);
+    PANSFE::Vec<int> a = {1, 2}, b = {3, 4}, c = {95, 130};
+    ASSERT_EQ(5 * (a + b * 6), c);
 }
 
-TEST(VectorTest, VectorAssignmentTest1) {
+TEST(VectorTest, VectorConversionTest1) {
+    PANSFE::Vec<int> a = {3};
+    ASSERT_EQ(int(a), 3);
+}
+
+TEST(VectorTest, VectorNormTest1) {
+    PANSFE::Vec<int> a = {3, 4};
+    ASSERT_EQ(a.Norm(), 5);
+}
+
+TEST(VectorTest, VectorNormalTest) {
+    PANSFE::Vec<double> a = {1, 2}, b = {1 / sqrt(5), 2 / sqrt(5)};
+    ASSERT_EQ(a.Normal(), b);
+}
+
+TEST(VectorTest, VectorVstackTest1) {
+    PANSFE::Vec<int> a = {1, 2}, b = {3, 4, 5}, c = {1, 2, 3, 4, 5};
+    ASSERT_EQ(a.Vstack(b), c);
+}
+
+TEST(VectorTest, VectorBlockTest1) {
+    PANSFE::Vec<int> a = {1, 2, 3, 4, 5, 6}, b = {2, 3, 4};
+    ASSERT_EQ(a.Block(1, 3), b);
+}
+
+TEST(VectorTest, VectorOStreamTest1) {
     PANSFE::Vec<int> a = {1, 2}, b = {3, 4};
-    a = b;
-    ASSERT_EQ(a.Size(), b.Size());
-    ASSERT_EQ(*(a.Values() + 0), *(b.Values() + 0));
-    ASSERT_EQ(*(a.Values() + 1), *(b.Values() + 1));
-    ASSERT_NE(a.Values(), b.Values());
-}
-
-TEST(VectorTest, VectorAssignmentTest2) {
-    PANSFE::Vec<int> a = {4, 3}, b = {2, 1};
-    a += b;
-    ASSERT_EQ(*(a.Values() + 0), 6);
-    ASSERT_EQ(*(a.Values() + 1), 4);
-}
-
-TEST(VectorTest, VectorAssignmentTest3) {
-    PANSFE::Vec<int> a = {3, 4}, b = {2, 1};
-    a -= b;
-    ASSERT_EQ(*(a.Values() + 0), 1);
-    ASSERT_EQ(*(a.Values() + 1), 3);
-}
-
-TEST(VectorTest, VectorAssignmentTest4) {
-    PANSFE::Vec<int> a = {4, 2};
-    a *= 2;
-    ASSERT_EQ(*(a.Values() + 0), 8);
-    ASSERT_EQ(*(a.Values() + 1), 4);
-}
-
-TEST(VectorTest, VectorAssignmentTest5) {
-    PANSFE::Vec<int> a = {4, 2};
-    a /= 2;
-    ASSERT_EQ(*(a.Values() + 0), 2);
-    ASSERT_EQ(*(a.Values() + 1), 1);
-}
-
-TEST(VectorTest, VectorAssignmentTest6) {
-    PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6};
-    a ^= b;
-    ASSERT_EQ(*(a.Values() + 0), -8);
-    ASSERT_EQ(*(a.Values() + 1), 9);
-    ASSERT_EQ(*(a.Values() + 2), -2);
+    std::stringstream ss;
+    ss << a << b;
+    ASSERT_EQ(ss.str(), "1\n2\n3\n4\n");
 }
