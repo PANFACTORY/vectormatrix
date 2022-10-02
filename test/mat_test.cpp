@@ -194,7 +194,7 @@ TEST(MatrixTest, MatrixDeterminantTest4) {
 
 TEST(MatrixTest, MatrixInverseTest1) {
     PANSFE::Mat<double> a = {{2}};
-    ASSERT_EQ(a.Inverse(), 0.5);
+    ASSERT_EQ(double(a.Inverse()), 0.5);
 }
 
 TEST(MatrixTest, MatrixInverseTest2) {

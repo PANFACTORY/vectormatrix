@@ -334,7 +334,7 @@ class Vec {
      *
      * @return T    T converted from this object
      */
-    operator T() const {
+    explicit operator T() const {
         assert(this->size == 1);
         return this->values[0];
     }
