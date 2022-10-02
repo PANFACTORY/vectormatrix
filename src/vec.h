@@ -52,7 +52,7 @@ class Vec {
      * @param _size     Size of the Vec object
      * @param _value    Each element value of the Vec object
      */
-    Vec(int _size, T _value = T()) {
+    explicit Vec(int _size, T _value = T()) {
         this->size = _size;
         if (this->size > 0) {
             this->values = new T[this->size];
@@ -244,25 +244,6 @@ class Vec {
     }
 
     /**
-     * @brief Compound assignment operator for vector products
-     *
-     * @param _vec      Multiplying vector
-     * @return Vec<T>&  Reference of this object
-     */
-    Vec<T> &operator^=(const Vec<T> &_vec) {
-        assert(this->size == 3 && _vec.size == 3);
-        Vec<T> retvec(3);
-        retvec[0] =
-            this->values[1] * _vec.values[2] - this->values[2] * _vec.values[1];
-        retvec[1] =
-            this->values[2] * _vec.values[0] - this->values[0] * _vec.values[2];
-        retvec[2] =
-            this->values[0] * _vec.values[1] - this->values[1] * _vec.values[0];
-        *this = retvec;
-        return *this;
-    }
-
-    /**
      * @brief Addition operator
      *
      * @param _vec          Adding vector
@@ -306,18 +287,21 @@ class Vec {
     }
 
     /**
-     * @brief Get scalar product
+     * @brief Get matrix from vector matrix product
      *
-     * @param _vec  Vector used scalar product
-     * @return T    Scalar product
+     * @param _mat      Matrix used vector matrix product
+     * @return Mat<T>   Matrix from vector matrix product
      */
-    T operator*(const Vec<T> &_vec) const {
-        assert(this->size == _vec.size);
-        T retvalue = T();
-        for (int i = 0; i < this->size; i++) {
-            retvalue += this->values[i] * _vec.values[i];
+    Mat<T> operator*(const Mat<T> &_mat) {
+        assert(_mat.row == 1);
+        Mat<T> retmat(this->size, _mat.col);
+        for (int i = 0; i < retmat.row; ++i) {
+            for (int j = 0; j < retmat.col; ++j) {
+                retmat.values[retmat.col * i + j] =
+                    this->values[i] * _mat.values[j];
+            }
         }
-        return retvalue;
+        return retmat;
     }
 
     /**
@@ -329,18 +313,6 @@ class Vec {
     const Vec<T> operator/(T _a) {
         Vec<T> retvec = *this;
         retvec /= _a;
-        return retvec;
-    }
-
-    /**
-     * @brief Get vector product
-     *
-     * @param _vec          Vector used vector product
-     * @return const Vec<T> Vector product
-     */
-    const Vec<T> operator^(const Vec<T> &_vec) const {
-        Vec<T> retvec = *this;
-        retvec ^= _vec;
         return retvec;
     }
 
@@ -372,7 +344,7 @@ class Vec {
      *
      * @return T    Norm of this vector
      */
-    T Norm() const { return sqrt((*this) * (*this)); }
+    T Norm() const { return sqrt((*this).Dot(*this)); }
 
     /**
      * @brief Normalize vector
@@ -382,6 +354,39 @@ class Vec {
     const Vec<T> Normal() const {
         Vec<T> retvec = *this;
         return retvec / retvec.Norm();
+    }
+
+    /**
+     * @brief Get scalar product
+     *
+     * @param _vec  Vector used scalar product
+     * @return T    Scalar product
+     */
+    T Dot(const Vec<T> &_vec) const {
+        assert(this->size == _vec.size);
+        T retvalue = T();
+        for (int i = 0; i < this->size; i++) {
+            retvalue += this->values[i] * _vec.values[i];
+        }
+        return retvalue;
+    }
+
+    /**
+     * @brief Get vector product
+     *
+     * @param _vec          Vector used vector product
+     * @return const Vec<T> Vector product
+     */
+    const Vec<T> Cross(const Vec<T> &_vec) const {
+        assert(this->size == 3 && _vec.size == 3);
+        Vec<T> retvec(3);
+        retvec[0] =
+            this->values[1] * _vec.values[2] - this->values[2] * _vec.values[1];
+        retvec[1] =
+            this->values[2] * _vec.values[0] - this->values[0] * _vec.values[2];
+        retvec[2] =
+            this->values[0] * _vec.values[1] - this->values[1] * _vec.values[0];
+        return retvec;
     }
 
     /**
@@ -412,9 +417,9 @@ class Vec {
         Mat<T> retmat(this->size, _mat.col + 1);
         for (int i = 0; i < retmat.row; i++) {
             retmat.values[retmat.col * i] = this->values[i];
-            for (int j = 0; j < retmat.col; j++) {
-                retmat.values[retmat.col * i + (j + 1)] =
-                    _mat.values[_mat.col * i + j];
+            for (int j = 1; j < retmat.col; j++) {
+                retmat.values[retmat.col * i + j] =
+                    _mat.values[_mat.col * i + j - 1];
             }
         }
         return retmat;

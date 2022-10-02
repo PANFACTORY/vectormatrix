@@ -599,7 +599,7 @@ class Mat {
  * @return std::ostream&    Stream updated
  */
 template <class U>
-std::ostream &operator<<(std::ostream &_out, const Mat<U> &_mat) {
+inline std::ostream &operator<<(std::ostream &_out, const Mat<U> &_mat) {
     for (int i = 0; i < _mat.row; i++) {
         for (int j = 0; j < _mat.col; j++) {
             _out << _mat.values[_mat.col * i + j] << "\t";
@@ -618,7 +618,7 @@ std::ostream &operator<<(std::ostream &_out, const Mat<U> &_mat) {
  * @return Mat<U>   Multipled matrix
  */
 template <class U>
-Mat<U> operator*(U _a, const Mat<U> &_mat) {
+inline Mat<U> operator*(U _a, const Mat<U> &_mat) {
     return _mat * _a;
 }
 }  // namespace PANSFE

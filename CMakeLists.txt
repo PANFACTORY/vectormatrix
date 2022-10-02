@@ -10,7 +10,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 enable_testing()
 
-add_executable(VectorMatrixTest test/vec_test.cpp test/mat_test.cpp)
+add_executable(VectorMatrixTest test/vec_test.cpp test/mat_test.cpp test/vec_mat_test.cpp)
 target_link_libraries(VectorMatrixTest gtest_main)
 
 include(GoogleTest)

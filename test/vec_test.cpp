@@ -95,12 +95,6 @@ TEST(VectorTest, VectorAssignmentTest5) {
     ASSERT_EQ(a, b);
 }
 
-TEST(VectorTest, VectorAssignmentTest6) {
-    PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6}, c = {-8, 9, -2};
-    a ^= b;
-    ASSERT_EQ(a, c);
-}
-
 TEST(VectorTest, VectorOperatorTest1) {
     PANSFE::Vec<int> a = {5, 3}, b = {2, 1}, c = {7, 4};
     ASSERT_EQ(a + b, c);
@@ -127,18 +121,18 @@ TEST(VectorTest, VectorOperatorTest5) {
 }
 
 TEST(VectorTest, VectorOperatorTest6) {
-    PANSFE::Vec<int> a = {5, 3}, b = {2, 1};
-    ASSERT_EQ(a * b, 13);
-}
-
-TEST(VectorTest, VectorOperatorTest7) {
     PANSFE::Vec<int> a = {2, 4}, b = {1, 2};
     ASSERT_EQ(a / 2, b);
 }
 
-TEST(VectorTest, VectorOperatorTest8) {
+TEST(VectorTest, VectorDotTest1) {
+    PANSFE::Vec<int> a = {5, 3}, b = {2, 1};
+    ASSERT_EQ(a.Dot(b), 13);
+}
+
+TEST(VectorTest, VectorCrossTest1) {
     PANSFE::Vec<int> a = {1, 2, 5}, b = {3, 4, 6}, c = {-8, 9, -2};
-    ASSERT_EQ(a ^ b, c);
+    ASSERT_EQ(a.Cross(b), c);
 }
 
 TEST(VectorTest, VectorOperatorTest9) {
